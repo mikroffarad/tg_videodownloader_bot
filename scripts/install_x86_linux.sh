@@ -24,9 +24,10 @@ if ! command -v python3.12 &> /dev/null; then
     exit 1
 fi
 
-# Get current directory
+# Get project root directory (parent of scripts)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+cd "$PROJECT_ROOT"
 
 echo -e "${GREEN}✓ Python 3.12 found${NC}"
 

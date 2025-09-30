@@ -65,6 +65,23 @@ class BotConfig:
             "outtmpl": self.output_template,
             "format": self.video_format,
             "quiet": True,
+            # Add options to bypass YouTube restrictions
+            "extractor_args": {
+                "youtube": {
+                    "skip": ["dash", "hls"],  # Skip adaptive formats that might cause issues
+                    "player_client": ["android", "web"],  # Use multiple clients
+                    "player_skip": ["configs"],
+                }
+            },
+            # Use custom user agent
+            "http_headers": {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            },
+            # Retry options
+            "retries": 3,
+            "fragment_retries": 3,
+            # Don't check SSL certificates (sometimes helps with geo-blocked content)
+            "nocheckcertificate": True,
         }
 
         if self.cookies_file and os.path.exists(self.cookies_file):

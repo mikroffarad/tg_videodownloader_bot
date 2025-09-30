@@ -26,30 +26,6 @@ chmod +x scripts/install_arm_termux.sh
 ./scripts/install_arm_termux.sh
 ```
 
-## 📁 Project Structure
-
-```
-tg_videodownloader_bot/
-├── main.py                    # Main bot entry point
-├── bot.py                     # Legacy bot file (deprecated)
-├── src/                       # Source code modules
-│   ├── __init__.py
-│   ├── config.py             # Configuration management
-│   ├── handlers.py           # Message and callback handlers
-│   └── utils.py              # Utility functions
-├── scripts/                   # Installation and launch scripts
-│   ├── install_x86_linux.sh  # Linux installation script
-│   ├── install_arm_termux.sh # Termux installation script
-│   ├── launch_x86_linux.sh   # Linux launch script
-│   └── launch_arm_termux.sh  # Termux launch script
-├── config/                    # Configuration files (future use)
-├── downloads/                 # Temporary download directory
-├── requirements.txt           # Python dependencies
-├── www.instagram.com_cookies.txt  # Instagram cookies (optional)
-├── .env                       # Environment variables
-└── README.md                  # This file
-```
-
 ## 🛠️ Manual Installation
 
 ### Prerequisites
@@ -96,15 +72,6 @@ tg_videodownloader_bot/
 3. **Manage description**: Use the interactive buttons to keep or remove video description
 4. **Enjoy**: The bot automatically cleans up your chat and provides a smooth experience
 
-## 🌐 Supported Platforms
-
-- **Instagram**: Reels, Posts, Stories, IGTV
-- **YouTube**: Videos, Shorts, Live streams
-- **TikTok**: Videos and music
-- **Twitter/X**: Videos and GIFs
-- **Facebook**: Videos and Reels
-- **And 100+ more platforms** supported by yt-dlp
-
 ## ⚙️ Configuration
 
 ### Environment Variables (.env)
@@ -113,7 +80,7 @@ BOT_TOKEN=your_telegram_bot_token_here
 ```
 
 ### Instagram Cookies (Optional)
-For better Instagram support, add your cookies to `www.instagram.com_cookies.txt`
+For better Instagram support, add your cookies to `secrets/www.instagram.com_cookies.txt`
 
 ## 🚀 Launch Scripts
 
@@ -143,11 +110,3 @@ The bot is built with a modular structure:
 - aiogram 3.7.0
 - yt-dlp 2024.4.9+
 - python-dotenv 1.0.0+
-
-## 🤝 Contributing
-
-Feel free to submit issues, feature requests, or pull requests to improve the bot!
-
-## 📄 License
-
-This project is open source and available under the MIT License.

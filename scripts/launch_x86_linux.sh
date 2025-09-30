@@ -6,9 +6,10 @@ set -e
 
 echo "🚀 Starting Telegram Video Downloader Bot..."
 
-# Get current directory
+# Get project root directory (parent of scripts)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+cd "$PROJECT_ROOT"
 
 # Check if virtual environment exists
 if [ ! -d "venv" ]; then
