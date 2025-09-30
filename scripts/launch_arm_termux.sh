@@ -6,19 +6,24 @@ set -e
 
 echo "🚀 Starting Telegram Video Downloader Bot on Termux..."
 
-# Get the directory where the bot is located
-# Assuming the bot is in the home directory or adjust the path as needed
-BOT_DIR="$HOME/tg_videodownloader_bot"
-
-# If running from shortcuts, we need to navigate to bot directory
-if [ -d "$BOT_DIR" ]; then
-    cd "$BOT_DIR"
+# Get project root directory
+# First try to get it from script location
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [[ "$SCRIPT_DIR" == *"/scripts" ]]; then
+    PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+    cd "$PROJECT_ROOT"
 else
-    # Try current directory if BOT_DIR doesn't exist
-    if [ ! -f "main.py" ]; then
-        echo "❌ Bot directory not found. Please make sure the bot is installed."
-        echo "Expected location: $BOT_DIR"
-        exit 1
+    # Fallback: try home directory
+    BOT_DIR="$HOME/tg_videodownloader_bot"
+    if [ -d "$BOT_DIR" ]; then
+        cd "$BOT_DIR"
+    else
+        # Try current directory if neither works
+        if [ ! -f "main.py" ]; then
+            echo "❌ Bot directory not found. Please make sure the bot is installed."
+            echo "Expected locations: $BOT_DIR or project scripts directory"
+            exit 1
+        fi
     fi
 fi
 

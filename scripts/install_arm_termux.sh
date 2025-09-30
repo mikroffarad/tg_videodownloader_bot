@@ -27,9 +27,10 @@ pkg install -y python python-pip git
 echo -e "${YELLOW}Checking Python version...${NC}"
 python --version
 
-# Get current directory
+# Get project root directory (parent of scripts)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+cd "$PROJECT_ROOT"
 
 # Create virtual environment
 echo -e "${YELLOW}Creating virtual environment...${NC}"
