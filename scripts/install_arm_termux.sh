@@ -21,7 +21,11 @@ pkg upgrade -y
 
 # Install Python and dependencies
 echo -e "${YELLOW}Installing Python and required packages...${NC}"
-pkg install -y python python-pip git
+pkg install -y python python-pip git build-essential libffi libffi-dev openssl-dev
+
+# Install rust if needed for some packages
+echo -e "${YELLOW}Installing additional build tools...${NC}"
+pkg install -y rust || echo -e "${YELLOW}Rust installation failed, continuing without it...${NC}"
 
 # Check Python version
 echo -e "${YELLOW}Checking Python version...${NC}"
@@ -41,7 +45,32 @@ echo -e "${GREEN}✓ Virtual environment created${NC}"
 echo -e "${YELLOW}Installing dependencies...${NC}"
 source venv/bin/activate
 pip install --upgrade pip
-pip install -r requirements.txt
+
+# Use Termux-specific requirements if available, otherwise fallback to main requirements
+if [ -f "requirements-termux.txt" ]; then
+    echo -e "${YELLOW}Using Termux-optimized requirements...${NC}"
+    if ! pip install -r requirements-termux.txt; then
+        echo -e "${RED}Failed to install Termux requirements. Trying manual installation...${NC}"
+        pip install aiogram==3.4.1 || pip install aiogram
+        pip install yt-dlp
+        pip install python-dotenv
+        pip install requests
+        pip install "pydantic<2.0" || pip install pydantic==1.10.12
+        pip install aiohttp
+        pip install aiofiles
+    fi
+else
+    echo -e "${YELLOW}Using standard requirements...${NC}"
+    if ! pip install -r requirements.txt; then
+        echo -e "${RED}Failed to install standard requirements. Trying Termux compatibility mode...${NC}"
+        pip install aiogram==3.4.1 || pip install aiogram
+        pip install yt-dlp
+        pip install python-dotenv
+        pip install requests
+        pip install "pydantic<2.0" || pip install pydantic==1.10.12
+    fi
+fi
+
 echo -e "${GREEN}✓ Dependencies installed${NC}"
 
 # Create secrets directory and .env file if they don't exist
