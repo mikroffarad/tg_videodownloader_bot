@@ -24,14 +24,14 @@ if ! command -v python3 &> /dev/null; then
     exit 1
 fi
 
-# Check Python version compatibility (3.8 <= version <= 3.12)
+# Check Python version compatibility (3.8.x - 3.12.x)
 PYTHON_VERSION=$(python3 --version 2>&1)
-if ! python3 -c "import sys; exit(0 if (3, 8) <= sys.version_info <= (3, 12) else 1)" 2>/dev/null; then
+if ! python3 -c "import sys; exit(0 if (3, 8) <= sys.version_info[:2] <= (3, 12) else 1)" 2>/dev/null; then
     echo -e "${RED}Python version $PYTHON_VERSION is not supported.${NC}"
-    echo -e "${RED}Supported versions: Python 3.8 - 3.12 (PyO3 limitation)${NC}"
-    echo "You can install Python 3.12 using:"
+    echo -e "${RED}Supported versions: Python 3.8.x - 3.12.x (PyO3 limitation)${NC}"
+    echo "You can install a compatible Python version using:"
     echo "  - Ubuntu/Debian: sudo apt update && sudo apt install python3.12 python3.12-venv"
-    echo "  - Or use pyenv: pyenv install 3.12.0 && pyenv global 3.12.0"
+    echo "  - Or use pyenv: pyenv install 3.12.11 && pyenv global 3.12.11"
     exit 1
 fi
 

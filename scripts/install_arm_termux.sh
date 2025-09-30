@@ -33,10 +33,10 @@ echo -e "${GREEN}✓ Build dependencies installed${NC}"
 echo -e "${YELLOW}Checking Python version...${NC}"
 PYTHON_VERSION=$(python --version 2>&1)
 
-# Check if Python version is compatible (3.8 <= version <= 3.12)
-if ! python -c "import sys; exit(0 if (3, 8) <= sys.version_info <= (3, 12) else 1)" 2>/dev/null; then
+# Check if Python version is compatible (3.8.x - 3.12.x)
+if ! python -c "import sys; exit(0 if (3, 8) <= sys.version_info[:2] <= (3, 12) else 1)" 2>/dev/null; then
     echo -e "${RED}Python version $PYTHON_VERSION is not supported.${NC}"
-    echo -e "${RED}Supported versions: Python 3.8 - 3.12 (PyO3 limitation)${NC}"
+    echo -e "${RED}Supported versions: Python 3.8.x - 3.12.x (PyO3 limitation)${NC}"
     echo "Please install a compatible Python version:"
     echo "  pkg install python=3.12"
     exit 1

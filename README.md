@@ -39,8 +39,8 @@ chmod +x scripts/install_arm_termux.sh
    # Ubuntu/Debian (install specific version if needed):
    sudo apt update && sudo apt install python3.12 python3.12-venv python3.12-dev
 
-   # Or use pyenv for version management:
-   pyenv install 3.12.0 && pyenv global 3.12.0
+   # Or use pyenv for version management (any 3.12.x version):
+   pyenv install 3.12.11 && pyenv global 3.12.11
    ```
 
    **⚠️ Note:** Python 3.13+ is not supported due to PyO3 limitations in some dependencies.
