@@ -21,11 +21,18 @@ pkg upgrade -y
 
 # Install Python and dependencies
 echo -e "${YELLOW}Installing Python and required packages...${NC}"
-pkg install -y python python-pip git build-essential libffi libffi-dev openssl-dev
+# Store installed build packages for later cleanup
+BUILD_PACKAGES="build-essential libffi openssl clang"
+pkg install -y python python-pip git $BUILD_PACKAGES
 
-# Install rust if needed for some packages
+# Install rust if needed for some packages (will be cleaned up later)
 echo -e "${YELLOW}Installing additional build tools...${NC}"
-pkg install -y rust || echo -e "${YELLOW}Rust installation failed, continuing without it...${NC}"
+if pkg install -y rust; then
+    BUILD_PACKAGES="$BUILD_PACKAGES rust"
+    echo -e "${GREEN}✓ Rust installed${NC}"
+else
+    echo -e "${YELLOW}Rust installation failed, continuing without it...${NC}"
+fi
 
 # Check Python version
 echo -e "${YELLOW}Checking Python version...${NC}"
@@ -94,6 +101,18 @@ if [ -f "scripts/launch_arm_termux.sh" ]; then
     chmod +x ~/.shortcuts/launch_arm_termux.sh
     echo -e "${GREEN}✓ Launch script copied to ~/.shortcuts/${NC}"
 fi
+
+# Clean up build dependencies to save space
+echo -e "${YELLOW}Cleaning up build dependencies...${NC}"
+if [ -n "$BUILD_PACKAGES" ]; then
+    echo -e "${YELLOW}Removing temporary build packages: $BUILD_PACKAGES${NC}"
+    pkg uninstall -y $BUILD_PACKAGES || echo -e "${YELLOW}Some packages couldn't be removed (they might be needed by other apps)${NC}"
+    echo -e "${GREEN}✓ Build dependencies cleaned up${NC}"
+fi
+
+# Clean package cache to save space
+pkg clean
+echo -e "${GREEN}✓ Package cache cleaned${NC}"
 
 echo ""
 echo -e "${GREEN}🎉 Installation completed successfully!${NC}"
