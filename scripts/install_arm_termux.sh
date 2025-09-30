@@ -19,20 +19,15 @@ echo -e "${YELLOW}Updating Termux packages...${NC}"
 pkg update -y
 pkg upgrade -y
 
-# Install Python and dependencies
-echo -e "${YELLOW}Installing Python and required packages...${NC}"
-# Store installed build packages for later cleanup
-BUILD_PACKAGES="build-essential libffi openssl clang"
-pkg install -y python python-pip git $BUILD_PACKAGES
+# Install Python and essential packages
+echo -e "${YELLOW}Installing Python and essential packages...${NC}"
+pkg install -y python python-pip git
 
-# Install rust if needed for some packages (will be cleaned up later)
-echo -e "${YELLOW}Installing additional build tools...${NC}"
-if pkg install -y rust; then
-    BUILD_PACKAGES="$BUILD_PACKAGES rust"
-    echo -e "${GREEN}✓ Rust installed${NC}"
-else
-    echo -e "${YELLOW}Rust installation failed, continuing without it...${NC}"
-fi
+# Install temporary build dependencies for compilation
+echo -e "${YELLOW}Installing temporary build dependencies...${NC}"
+BUILD_PACKAGES="build-essential libffi openssl clang rust"
+pkg install -y $BUILD_PACKAGES
+echo -e "${GREEN}✓ Build dependencies installed${NC}"
 
 # Check Python version
 echo -e "${YELLOW}Checking Python version...${NC}"
@@ -49,36 +44,21 @@ python -m venv venv
 echo -e "${GREEN}✓ Virtual environment created${NC}"
 
 # Activate virtual environment and install dependencies
-echo -e "${YELLOW}Installing dependencies...${NC}"
+echo -e "${YELLOW}Installing Python dependencies...${NC}"
 source venv/bin/activate
 pip install --upgrade pip
 
-# Use Termux-specific requirements if available, otherwise fallback to main requirements
-if [ -f "requirements-termux.txt" ]; then
-    echo -e "${YELLOW}Using Termux-optimized requirements...${NC}"
-    if ! pip install -r requirements-termux.txt; then
-        echo -e "${RED}Failed to install Termux requirements. Trying manual installation...${NC}"
-        pip install aiogram==3.4.1 || pip install aiogram
-        pip install yt-dlp
-        pip install python-dotenv
-        pip install requests
-        pip install "pydantic<2.0" || pip install pydantic==1.10.12
-        pip install aiohttp
-        pip install aiofiles
-    fi
-else
-    echo -e "${YELLOW}Using standard requirements...${NC}"
-    if ! pip install -r requirements.txt; then
-        echo -e "${RED}Failed to install standard requirements. Trying Termux compatibility mode...${NC}"
-        pip install aiogram==3.4.1 || pip install aiogram
-        pip install yt-dlp
-        pip install python-dotenv
-        pip install requests
-        pip install "pydantic<2.0" || pip install pydantic==1.10.12
-    fi
-fi
+# Install from standard requirements.txt (build dependencies are now available)
+echo -e "${YELLOW}Installing packages (this may take a while for ARM compilation)...${NC}"
+pip install -r requirements.txt
+echo -e "${GREEN}✓ Python dependencies installed${NC}"
 
-echo -e "${GREEN}✓ Dependencies installed${NC}"
+# Clean up build dependencies to save space
+echo -e "${YELLOW}Cleaning up temporary build dependencies...${NC}"
+echo -e "${YELLOW}Removing: $BUILD_PACKAGES${NC}"
+pkg uninstall -y $BUILD_PACKAGES || echo -e "${YELLOW}Some packages couldn't be removed (might be needed by other apps)${NC}"
+pkg clean
+echo -e "${GREEN}✓ Build dependencies cleaned up${NC}"
 
 # Create secrets directory and .env file if they don't exist
 mkdir -p secrets
@@ -101,18 +81,6 @@ if [ -f "scripts/launch_arm_termux.sh" ]; then
     chmod +x ~/.shortcuts/launch_arm_termux.sh
     echo -e "${GREEN}✓ Launch script copied to ~/.shortcuts/${NC}"
 fi
-
-# Clean up build dependencies to save space
-echo -e "${YELLOW}Cleaning up build dependencies...${NC}"
-if [ -n "$BUILD_PACKAGES" ]; then
-    echo -e "${YELLOW}Removing temporary build packages: $BUILD_PACKAGES${NC}"
-    pkg uninstall -y $BUILD_PACKAGES || echo -e "${YELLOW}Some packages couldn't be removed (they might be needed by other apps)${NC}"
-    echo -e "${GREEN}✓ Build dependencies cleaned up${NC}"
-fi
-
-# Clean package cache to save space
-pkg clean
-echo -e "${GREEN}✓ Package cache cleaned${NC}"
 
 echo ""
 echo -e "${GREEN}🎉 Installation completed successfully!${NC}"

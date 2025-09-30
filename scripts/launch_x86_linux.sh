@@ -37,6 +37,10 @@ fi
 # Activate virtual environment
 source venv/bin/activate
 
+# Show Python version for debugging
+PYTHON_VERSION=$(python --version 2>&1)
+echo "✅ Using $PYTHON_VERSION"
+
 # Start the bot
 echo "✅ Starting bot..."
 python main.py

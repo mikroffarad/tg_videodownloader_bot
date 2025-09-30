@@ -25,24 +25,27 @@ chmod +x scripts/install_x86_linux.sh
 chmod +x scripts/install_arm_termux.sh
 ./scripts/install_arm_termux.sh
 ```
+*Note: The Termux script will automatically install build dependencies (Rust, clang, etc.), compile Python packages, and then remove build tools to save space.*
 
 ## 🛠️ Manual Installation
 
 ### Prerequisites
-- Python 3.12 (recommended) or Python 3.8+
+- Python 3.8+ (3.12 recommended)
 - pip (Python package manager)
 
 ### Installation Steps
-1. **Switch to Python 3.12** (using pyenv or system package manager):
+1. **Install Python** (any version 3.8 or higher):
    ```bash
+   # Ubuntu/Debian:
+   sudo apt update && sudo apt install python3 python3-venv python3-pip
+
+   # Or use pyenv for specific version:
    pyenv install 3.12.0 && pyenv global 3.12.0
-   # or for Ubuntu/Debian:
-   # sudo apt update && sudo apt install python3.12 python3.12-venv
    ```
 
 2. **Create virtual environment**:
    ```bash
-   python3.12 -m venv venv
+   python3 -m venv venv
    ```
 
 3. **Activate virtual environment**:

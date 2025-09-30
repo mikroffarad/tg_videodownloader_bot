@@ -14,26 +14,27 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-# Check if Python 3.12 is available
+# Check if Python 3 is available
 echo -e "${YELLOW}Checking Python version...${NC}"
-if ! command -v python3.12 &> /dev/null; then
-    echo -e "${RED}Python 3.12 is not installed. Please install it first.${NC}"
+if ! command -v python3 &> /dev/null; then
+    echo -e "${RED}Python 3 is not installed. Please install it first.${NC}"
     echo "You can install it using:"
-    echo "  - Ubuntu/Debian: sudo apt update && sudo apt install python3.12 python3.12-venv"
+    echo "  - Ubuntu/Debian: sudo apt update && sudo apt install python3 python3-venv python3-pip"
     echo "  - Or use pyenv: pyenv install 3.12.0 && pyenv global 3.12.0"
     exit 1
 fi
+
+PYTHON_VERSION=$(python3 --version 2>&1)
+echo -e "${GREEN}✓ Found $PYTHON_VERSION${NC}"
 
 # Get project root directory (parent of scripts)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 cd "$PROJECT_ROOT"
 
-echo -e "${GREEN}✓ Python 3.12 found${NC}"
-
 # Create virtual environment
 echo -e "${YELLOW}Creating virtual environment...${NC}"
-python3.12 -m venv venv
+python3 -m venv venv
 echo -e "${GREEN}✓ Virtual environment created${NC}"
 
 # Activate virtual environment and install dependencies
