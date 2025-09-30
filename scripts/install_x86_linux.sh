@@ -14,7 +14,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-# Check if Python 3 is available
+# Check if Python 3 is available and compatible
 echo -e "${YELLOW}Checking Python version...${NC}"
 if ! command -v python3 &> /dev/null; then
     echo -e "${RED}Python 3 is not installed. Please install it first.${NC}"
@@ -24,8 +24,18 @@ if ! command -v python3 &> /dev/null; then
     exit 1
 fi
 
+# Check Python version compatibility (3.8 <= version <= 3.12)
 PYTHON_VERSION=$(python3 --version 2>&1)
-echo -e "${GREEN}✓ Found $PYTHON_VERSION${NC}"
+if ! python3 -c "import sys; exit(0 if (3, 8) <= sys.version_info <= (3, 12) else 1)" 2>/dev/null; then
+    echo -e "${RED}Python version $PYTHON_VERSION is not supported.${NC}"
+    echo -e "${RED}Supported versions: Python 3.8 - 3.12 (PyO3 limitation)${NC}"
+    echo "You can install Python 3.12 using:"
+    echo "  - Ubuntu/Debian: sudo apt update && sudo apt install python3.12 python3.12-venv"
+    echo "  - Or use pyenv: pyenv install 3.12.0 && pyenv global 3.12.0"
+    exit 1
+fi
+
+echo -e "${GREEN}✓ Compatible $PYTHON_VERSION found${NC}"
 
 # Get project root directory (parent of scripts)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

@@ -25,26 +25,31 @@ chmod +x scripts/install_x86_linux.sh
 chmod +x scripts/install_arm_termux.sh
 ./scripts/install_arm_termux.sh
 ```
-*Note: The Termux script will automatically install build dependencies (Rust, clang, etc.), compile Python packages, and then remove build tools to save space.*
+*Note: The Termux script will install build dependencies (Rust, clang, etc.) for compilation. After installation, it will show commands to safely remove build tools and save space.*
 
 ## 🛠️ Manual Installation
 
 ### Prerequisites
-- Python 3.8+ (3.12 recommended)
+- Python 3.8 - 3.12 (3.12 recommended, 3.13+ not supported due to PyO3 limitations)
 - pip (Python package manager)
 
 ### Installation Steps
-1. **Install Python** (any version 3.8 or higher):
+1. **Install Python** (version 3.8 - 3.12):
    ```bash
-   # Ubuntu/Debian:
-   sudo apt update && sudo apt install python3 python3-venv python3-pip
+   # Ubuntu/Debian (install specific version if needed):
+   sudo apt update && sudo apt install python3.12 python3.12-venv python3.12-dev
 
-   # Or use pyenv for specific version:
+   # Or use pyenv for version management:
    pyenv install 3.12.0 && pyenv global 3.12.0
    ```
 
+   **⚠️ Note:** Python 3.13+ is not supported due to PyO3 limitations in some dependencies.
+
 2. **Create virtual environment**:
    ```bash
+   # Use specific version if you have multiple Python installations
+   python3.12 -m venv venv
+   # or just python3 if it's compatible (3.8-3.12)
    python3 -m venv venv
    ```
 
@@ -109,7 +114,7 @@ The bot is built with a modular structure:
 
 ## 📋 Requirements
 
-- Python 3.8+ (3.12 recommended)
+- Python 3.8 - 3.12 (3.13+ not supported due to PyO3 limitations)
 - aiogram 3.7.0
 - yt-dlp 2024.4.9+
 - python-dotenv 1.0.0+
